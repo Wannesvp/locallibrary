@@ -1,0 +1,75 @@
+{% extends "base_generic.html" %}
+
+{% block extra_style %}
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+  </style>
+{% endblock%}
+
+{% block content %}
+    <h1>Borrowed books</h1>
+
+    {% if bookinstance_list %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}" role="alert">{{ message }}</div>
+      {% endfor %}  
+    {% endif %}
+      
+    <!-- 
+    <ul>
+      <table>
+        {% for bookinst in bookinstance_list %}
+        <li class="{% if bookinst.is_overdue %}text-danger{% endif %}">
+          
+            <a href="{% url 'book-detail' bookinst.book.pk %}">{{ bookinst.book.title }}</a>
+            ({{ bookinst.due_back }}) - {{ bookinst.borrower.username }}
+            
+            {% if perms.catalog.can_mark_return %}
+              - <a href="{% url 'renew-book-librarian' bookinst.id %}">Renew</a>
+            {% endif %}
+        </table> 
+        </li>
+        {% endfor %}
+      </ul>
+      -->
+
+    <br>
+    <table>
+      <tr>
+        <th>Title</th>
+        <th>Due back</th>
+        <th>Borrower</th>
+        <th>Action</th>
+      </tr>
+      {% for bookinst in bookinstance_list %}
+      
+      <tr>
+        <td><a href="{% url 'book-detail' bookinst.book.pk %}">{{ bookinst.book.title }}</a></td>
+        <td class="{% if bookinst.is_overdue %}text-danger{% endif %}">{{ bookinst.due_back }}</td>
+        <td>{{ bookinst.borrower.username }}</td>
+        <td>{% if perms.catalog.can_mark_return %}<a href="{% url 'renew-book-librarian' bookinst.id %}">Renew</a>{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <br>
+    <br>
+
+    {% else %}
+      <p>There are no books borrowed.</p>
+    {% endif %}
+{% endblock %}

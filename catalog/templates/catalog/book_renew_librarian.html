@@ -1,0 +1,43 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+  <h1>Renew: {{ book_instance.book.title }}</h1>
+  <p>Borrower: {{ book_instance.borrower }}</p>
+  <p{% if book_instance.is_overdue %} class="text-danger"{% endif %}>Due date: {{ book_instance.due_back }}</p>
+
+  <!--<
+
+  {% if form.errors %}
+    {% for field in form %}
+        {% for error in field.errors %}
+            <p class="alert alert-danger"> {{ error }} </p>
+        {% endfor %}
+    {% endfor %}
+  {% endif %}
+  
+  <table>
+    {{ form.as_table }}
+  </table>
+  
+    -->
+
+  <form action="" method="post">
+    {% csrf_token %}
+    <table>
+      {% for error in form.non_field_errors %}
+          <tr><td>{{ error }}</td></tr>
+      {% endfor %}
+      
+      {% for field in form %}
+          {% for error in field.errors %}
+          <tr><p class="alert alert-danger">{{ error }}</p></tr>
+          {% endfor %}
+          <tr><th>{{ field.label_tag }}:</th><td>{{ field }}</td></td>
+      {% endfor %}
+      </table>
+    <input type="submit" value="Submit">
+  </form>
+
+  
+
+{% endblock %}
